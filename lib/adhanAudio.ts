@@ -1,15 +1,16 @@
 import { Platform } from 'react-native';
-import { Audio } from 'expo-av';
+import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 
-let sound: Audio.Sound | null = null;
+const ADHAN_URL = 'https://www.islamcan.com/audio/adhan/azan1.mp3';
+
+let player: AudioPlayer | null = null;
 let playing = false;
 
 export async function playAdhan() {
   try {
     if (Platform.OS === 'web') {
-      // ويب: نحاول نشغل صوت باستخدام Audio API لو موجود
       try {
-        const a = new (window as any).Audio('https://www.islamcan.com/audio/adhan/azan1.mp3');
+        const a = new (window as any).Audio(ADHAN_URL);
         a.volume = 1.0;
         a.loop = true;
         (a as any).play().catch(() => {});
@@ -19,22 +20,24 @@ export async function playAdhan() {
       } catch (e) {}
       return;
     }
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      playThroughEarpieceAndroid: false,
+    await setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: 'doNotMix',
+      shouldRouteThroughEarpiece: false,
     });
-    if (sound) {
-      await sound.stopAsync().catch(() => {});
-      await sound.unloadAsync().catch(() => {});
+    if (player) {
+      try {
+        player.pause();
+        player.remove();
+      } catch (e) {}
+      player = null;
     }
-    const { sound: s } = await Audio.Sound.createAsync(
-      { uri: 'https://www.islamcan.com/audio/adhan/azan1.mp3' },
-      { shouldPlay: true, isLooping: true, volume: 1.0 },
-    );
-    sound = s;
+    const p = createAudioPlayer({ uri: ADHAN_URL });
+    p.loop = true;
+    p.volume = 1.0;
+    p.play();
+    player = p;
     playing = true;
   } catch (e) {
     // لو مفيش إنترنت أو خطأ، نكمل بدون صوت
@@ -52,10 +55,12 @@ export async function stopAdhan() {
       playing = false;
       return;
     }
-    if (sound) {
-      await sound.stopAsync().catch(() => {});
-      await sound.unloadAsync().catch(() => {});
-      sound = null;
+    if (player) {
+      try {
+        player.pause();
+        player.remove();
+      } catch (e) {}
+      player = null;
     }
     playing = false;
   } catch (e) {

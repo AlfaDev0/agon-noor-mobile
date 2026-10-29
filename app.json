@@ -48,6 +48,7 @@
         "expo-build-properties",
         {
           "android": {
+            "ndkVersion": "27.1.12297006",
             "enableProguardInReleaseBuilds": true,
             "enableShrinkResourcesInReleaseBuilds": true,
             "usesCleartextTraffic": false
