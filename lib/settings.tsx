@@ -4,6 +4,7 @@ import { LANGS, translate, type Key, type Lang } from './i18n';
 import { THEMES, type Theme, type ThemeId } from './theme';
 import { DEFAULT_LOCATION, type GeoLocation, type MethodId, type PrayerKey } from './prayer';
 import type { RiwayaId } from './riwayat';
+import type { AlarmItem } from './alarmClock';
 
 export interface TimeOfDay { h: number; m: number }
 
@@ -31,6 +32,8 @@ export interface Settings {
   azkar: { date: string; progress: Record<string, number> };
   tasbeeh: { preset: string; count: number; target: number; cycles: number; total: number };
   pin: PinRecord | null;
+  alarms: AlarmItem[];
+  khatma: { completed: number[] };
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -57,6 +60,8 @@ export const DEFAULT_SETTINGS: Settings = {
   azkar: { date: '', progress: {} },
   tasbeeh: { preset: 'subhan', count: 0, target: 33, cycles: 0, total: 0 },
   pin: null,
+  alarms: [],
+  khatma: { completed: [] },
 };
 
 interface Ctx {

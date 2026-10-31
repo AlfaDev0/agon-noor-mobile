@@ -11,6 +11,7 @@ const { width, height } = Dimensions.get('window');
 
 export default function AdhanAlarmOverlay() {
   const { visible, data, hide } = useAlarm();
+  const isAlarmKind = data?.kind === 'alarm';
 
   const [scale1] = useState(() => new Animated.Value(0.8));
   const [scale2] = useState(() => new Animated.Value(0.9));
@@ -20,7 +21,7 @@ export default function AdhanAlarmOverlay() {
   const [float2] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
-    if (!visible) {
+    if (!visible || isAlarmKind) {
       stopAdhan().catch(() => {});
       return;
     }
@@ -77,9 +78,9 @@ export default function AdhanAlarmOverlay() {
     ).start();
 
     return () => clearInterval(h1);
-  }, [visible, scale1, scale2, scale3, rotate, float1, float2]);
+  }, [visible, isAlarmKind, scale1, scale2, scale3, rotate, float1, float2]);
 
-  if (!visible) return null;
+  if (!visible || isAlarmKind) return null;
 
   const rot = rotate.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
 

@@ -45,7 +45,7 @@ export default function SettingsScreen() {
   );
 
   const wrap = { flexDirection: 'row', flexWrap: 'wrap', gap: 8 } as const;
-  const themeName = { green: 'theme_green', blue: 'theme_blue', gold: 'theme_gold', dark: 'theme_dark', light: 'theme_light' } as const;
+  const themeName = { green: 'theme_green', blue: 'theme_blue', gold: 'theme_gold', dark: 'theme_dark', light: 'theme_light', purple: 'theme_purple', sunset: 'theme_sunset' } as const;
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.bg }}>

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { FlatList, ScrollView, Text, TextInput, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useApp } from '../lib/settings';
@@ -25,6 +26,7 @@ export default function QuranScreen() {
   }, [q]);
 
   const last = s.lastRead ? SURAHS[s.lastRead.surah - 1] : null;
+  const doneCount = s.khatma?.completed?.length ?? 0;
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.bg }}>
@@ -64,6 +66,34 @@ export default function QuranScreen() {
                 <Ionicons name="play-circle" size={30} color={theme.primary} />
               </Card>
             ) : null}
+            <Card style={{ gap: 10 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Ionicons name="ribbon" size={22} color={theme.accent} />
+                <Txt v="h2" style={{ flex: 1 }}>{t('khatma')}</Txt>
+                <Text style={{ color: theme.primary, fontWeight: '900', fontSize: 15 }}>{doneCount}/114</Text>
+              </View>
+              <View style={{ height: 10, borderRadius: 6, backgroundColor: theme.card2, overflow: 'hidden' }}>
+                <LinearGradient
+                  colors={theme.grad}
+                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={{ height: '100%', width: `${Math.round((doneCount / 114) * 100)}%`, borderRadius: 6 }}
+                />
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Txt v="small" sub>{t('khatma_progress', { done: doneCount, total: 114 })}</Txt>
+                {doneCount > 0 ? (
+                  <PressScale onPress={() => update({ khatma: { completed: [] } })} style={{ paddingVertical: 4, paddingHorizontal: 10, borderRadius: 10, backgroundColor: theme.card2 }}>
+                    <Txt v="caption" color={theme.primary}>{t('khatma_reset')}</Txt>
+                  </PressScale>
+                ) : null}
+              </View>
+              {doneCount >= 114 ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: theme.primary + '18', padding: 10, borderRadius: 12 }}>
+                  <Ionicons name="sparkles" size={18} color={theme.primary} />
+                  <Txt v="small" color={theme.primary} style={{ flex: 1 }}>{t('quran_complete_body')}</Txt>
+                </View>
+              ) : null}
+            </Card>
           </View>
         }
         renderItem={({ item }) => (
@@ -85,7 +115,10 @@ export default function QuranScreen() {
                 {item.tr} · {item.v} {t('verses')} · {item.rev === 'Mecca' ? t('meccan') : t('medinan')}
               </Text>
             </View>
-            <Text style={{ fontFamily: ARABIC_FONT, fontSize: 24, color: theme.primary }}>{item.ar}</Text>
+            <View style={{ alignItems: 'center', gap: 2 }}>
+              <Text style={{ fontFamily: ARABIC_FONT, fontSize: 24, color: theme.primary }}>{item.ar}</Text>
+              {s.khatma?.completed?.includes(item.n) ? <Ionicons name="checkmark-circle" size={15} color={theme.success} /> : null}
+            </View>
           </PressScale>
         )}
         ListEmptyComponent={<Txt center sub style={{ marginTop: 30 }}>—</Txt>}

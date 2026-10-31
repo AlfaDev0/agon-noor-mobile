@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 import type { Settings } from './settings';
 import { translate, type Key } from './i18n';
 import { addDays, computeDay, dayInTz, METHODS, NOTIFY_KEYS, type PrayerKey } from './prayer';
+import type { AlarmItem } from './alarmClock';
 
 export const notificationsSupported = Platform.OS !== 'web';
 
@@ -42,6 +43,53 @@ async function ensureChannels(silent: boolean) {
     importance: Notifications.AndroidImportance.HIGH,
     sound: 'default',
   });
+  await Notifications.setNotificationChannelAsync('alarm', {
+    name: 'Alarms',
+    importance: Notifications.AndroidImportance.MAX,
+    sound: 'default',
+    vibrationPattern: [0, 500, 250, 500, 250, 800],
+    lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+    enableVibrate: true,
+    bypassDnd: true,
+  });
+}
+
+/** Re-schedules every enabled alarm as OS notifications (weekly or daily). */
+export async function rescheduleAlarms(alarms: AlarmItem[], lang: Settings['lang']): Promise<number> {
+  if (!notificationsSupported) return 0;
+  const granted = await ensurePermission(false);
+  if (!granted) return 0;
+  const tr = (k: Key) => translate(lang, k);
+  let count = 0;
+  const existing = await Notifications.getAllScheduledNotificationsAsync();
+  for (const n of existing) {
+    const d: any = n.content?.data;
+    if (d && d.type === 'alarm') await Notifications.cancelScheduledNotificationAsync(n.identifier);
+  }
+  for (const a of alarms) {
+    if (!a.enabled) continue;
+    const title = tr('alarm');
+    const body = a.label.trim() || tr('alarm_ringing');
+    const content = {
+      title, body, sound: a.sound ? ('default' as const) : (false as const),
+      data: { type: 'alarm', alarmId: a.id, label: a.label },
+    };
+    if (a.days.length >= 7) {
+      await Notifications.scheduleNotificationAsync({
+        content, trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour: a.h, minute: a.m, channelId: 'alarm' },
+      });
+      count++;
+    } else {
+      for (const d of a.days) {
+        await Notifications.scheduleNotificationAsync({
+          content,
+          trigger: { type: Notifications.SchedulableTriggerInputTypes.WEEKLY, weekday: d + 1, hour: a.h, minute: a.m, channelId: 'alarm' },
+        });
+        count++;
+      }
+    }
+  }
+  return count;
 }
 
 const PRAYER_LABEL: Record<PrayerKey, Key> = {
@@ -134,6 +182,7 @@ export async function rescheduleAll(s: Settings): Promise<number> {
       }
     }
   }
+  await rescheduleAlarms(s.alarms ?? [], s.lang).catch(() => {});
   return scheduled;
 }
 

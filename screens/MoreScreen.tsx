@@ -7,6 +7,7 @@ import { Card, FadeIn, FreePalestineChip, IconBadge, PressScale, ScreenHeader, T
 import type { Key } from '../lib/i18n';
 
 const ITEMS: { icon: keyof typeof Ionicons.glyphMap; label: Key; sub?: Key; route: string }[] = [
+  { icon: 'alarm', label: 'alarms', sub: 'alarm_sub', route: 'Alarm' },
   { icon: 'radio-button-on', label: 'tasbeeh', sub: 'tap_to_count', route: 'Tasbeeh' },
   { icon: 'compass', label: 'qibla', sub: 'qibla_direction', route: 'Qibla' },
   { icon: 'calculator', label: 'calculator', route: 'Calculator' },

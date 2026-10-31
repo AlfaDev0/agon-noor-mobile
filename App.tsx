@@ -15,6 +15,7 @@ import { LockScreen } from './components/LockScreen';
 import { PalestineFlag } from './components/PalestineFlag';
 import { AlarmProvider } from './lib/alarm';
 import AdhanAlarmOverlay from './components/AdhanAlarmOverlay';
+import AlarmOverlay from './components/AlarmOverlay';
 
 import HomeScreen from './screens/HomeScreen';
 import PrayerScreen from './screens/PrayerScreen';
@@ -32,6 +33,7 @@ import LocationScreen from './screens/LocationScreen';
 import SecurityScreen from './screens/SecurityScreen';
 import ContactScreen from './screens/ContactScreen';
 import AboutScreen from './screens/AboutScreen';
+import AlarmScreen from './screens/AlarmScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,7 +98,7 @@ function Root() {
   }, []);
 
   // Keep OS-level scheduled alerts in sync with settings.
-  const sig = JSON.stringify([s.notif, s.location, s.method, s.madhab, s.lang]);
+  const sig = JSON.stringify([s.notif, s.location, s.method, s.madhab, s.lang, s.alarms]);
   const sigRef = useRef(s);
   sigRef.current = s;
   useEffect(() => {
@@ -137,6 +139,7 @@ function Root() {
           <Stack.Screen name="Surah" component={SurahScreen} />
           <Stack.Screen name="AzkarSession" component={AzkarSessionScreen} />
           <Stack.Screen name="Tasbeeh" component={TasbeehScreen} />
+          <Stack.Screen name="Alarm" component={AlarmScreen} />
           <Stack.Screen name="Qibla" component={QiblaScreen} />
           <Stack.Screen name="Calculator" component={CalculatorScreen} />
           <Stack.Screen name="Zakat" component={ZakatScreen} />
@@ -171,6 +174,7 @@ export default function App() {
         <AlarmProvider>
           <Root />
           <AdhanAlarmOverlay />
+          <AlarmOverlay />
         </AlarmProvider>
       </SettingsProvider>
     </SafeAreaProvider>

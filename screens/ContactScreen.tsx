@@ -42,14 +42,34 @@ export default function ContactScreen() {
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScreenHeader back title={t('contact_direct')} subtitle={t('contact_sub')} />
       <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 50 }} keyboardShouldPersistTaps="handled">
-        <View style={{ borderRadius: 28, overflow: 'hidden', height: 360, backgroundColor: '#0B1020' }}>
-          <Image source={OWNER} style={{ width: '100%', height: '100%' }} contentFit="cover" contentPosition={{ top: 0, left: '50%' }} transition={300} accessibilityLabel={OWNER_NAME} />
-          <LinearGradient colors={['transparent', '#000000dd']} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 160, justifyContent: 'flex-end', padding: 18 }}>
-            <Text style={{ color: '#fff', fontSize: 30, fontWeight: '900' }}>{OWNER_NAME}</Text>
-            <Text style={{ color: '#ffffffcc', fontSize: 14, fontWeight: '600' }}>{t('owner_role')}</Text>
-            <Text style={{ color: theme.accent, fontSize: 16, fontWeight: '800', marginTop: 4, writingDirection: 'ltr' }}>{OWNER_PHONE_LOCAL}</Text>
-          </LinearGradient>
-          <View style={{ position: 'absolute', top: 12, right: 12 }}><FreePalestineChip compact /></View>
+        <View style={{ borderRadius: 30, overflow: 'hidden', backgroundColor: '#0B1020', borderWidth: 1, borderColor: theme.border }}>
+          <Image source={OWNER} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.55 }} contentFit="cover" contentPosition="top" transition={300} />
+          <View style={{ backgroundColor: '#08111Fcc', paddingHorizontal: 14, paddingTop: 14, paddingBottom: 8 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#25D36622', borderWidth: 1, borderColor: '#25D36688', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 999 }}>
+                <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: '#25D366' }} />
+                <Text style={{ color: '#D8FFE9', fontSize: 11.5, fontWeight: '800' }}>{t('photo_available')}</Text>
+              </View>
+              <FreePalestineChip compact />
+            </View>
+          </View>
+          <View style={{ alignItems: 'center', paddingTop: 6 }}>
+            <View style={{
+              width: 220, height: 280, borderRadius: 26, overflow: 'hidden',
+              borderWidth: 2.5, borderColor: theme.accent + 'CC', backgroundColor: '#101A2B',
+              shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 22, shadowOffset: { width: 0, height: 12 }, elevation: 10,
+            }}>
+              <Image source={OWNER} style={{ width: '100%', height: '100%' }} contentFit="cover" contentPosition={{ top: 0, left: '50%' }} transition={300} accessibilityLabel={OWNER_NAME} />
+              <LinearGradient colors={['transparent', '#00000055', '#000000E8']} locations={[0.45, 0.7, 1]} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 150, justifyContent: 'flex-end', padding: 14 }}>
+                <Text style={{ color: '#fff', fontSize: 24, fontWeight: '900' }}>{OWNER_NAME}</Text>
+                <Text style={{ color: theme.accent, fontSize: 12.5, fontWeight: '800', marginTop: 2 }}>{t('photo_badge')}</Text>
+              </LinearGradient>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, marginBottom: 14, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, backgroundColor: '#ffffff12', borderWidth: 1, borderColor: '#ffffff2A' }}>
+              <Ionicons name="call" size={14} color={theme.accent} />
+              <Text style={{ color: '#fff', fontSize: 15, fontWeight: '800', letterSpacing: 0.6, writingDirection: 'ltr' }}>{OWNER_PHONE_LOCAL}</Text>
+            </View>
+          </View>
         </View>
 
         <View style={{ flexDirection: 'row', gap: 10 }}>

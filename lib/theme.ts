@@ -1,4 +1,4 @@
-export type ThemeId = 'green' | 'blue' | 'gold' | 'dark' | 'light';
+export type ThemeId = 'green' | 'blue' | 'gold' | 'dark' | 'light' | 'purple' | 'sunset';
 
 export interface Theme {
   id: ThemeId;
@@ -44,6 +44,16 @@ export const THEMES: Record<ThemeId, Theme> = {
     primary: '#0E7490', primaryDark: '#0B566B', onPrimary: '#FFFFFF', accent: '#E08A00', border: '#E1E5EB',
     danger: '#C62828', success: '#16A34A', grad: ['#1394B5', '#0B566B'],
   },
+  purple: {
+    id: 'purple', dark: true, bg: '#120A1F', card: '#1D1233', card2: '#281A45', text: '#F1E9FF', sub: '#A392C4',
+    primary: '#A78BFA', primaryDark: '#7C5CE0', onPrimary: '#150B26', accent: '#F0ABFC', border: '#33224F',
+    danger: '#FB7185', success: '#34D399', grad: ['#7C3AED', '#2E1065'],
+  },
+  sunset: {
+    id: 'sunset', dark: false, bg: '#FFF5EE', card: '#FFFFFF', card2: '#FFE8D9', text: '#33170B', sub: '#8A6350',
+    primary: '#E4572E', primaryDark: '#B33F1C', onPrimary: '#FFFFFF', accent: '#F2A93B', border: '#F6D9C6',
+    danger: '#C62828', success: '#16A34A', grad: ['#F2A93B', '#C2410C'],
+  },
 };
 
-export const THEME_ORDER: ThemeId[] = ['green', 'blue', 'gold', 'dark', 'light'];
+export const THEME_ORDER: ThemeId[] = ['green', 'blue', 'gold', 'dark', 'light', 'purple', 'sunset'];
